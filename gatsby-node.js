@@ -74,6 +74,7 @@ exports.sourceNodes = (() => {
 						const jsonString = JSON.stringify(job);
 						const gatsbyNode = _extends({}, job, {
 								parent: '__SOURCE__',
+								children: [],
 								internal: {
 										type: 'hireWithGoogleJob',
 										content: jsonString,
