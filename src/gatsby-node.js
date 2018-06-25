@@ -28,11 +28,11 @@ async function getJob(jobUrl, { replaceDivs }) {
 async function getJobs({companyName, replaceDivs = true}) {
   const response = await axios.get(`${BASE_URL}${companyName}`)
   const $ = cheerio.load(response.data)
-  const jobLinks = $(jobSelector).map( (i, elm) => {
+  const jobUrls = $(jobSelector).map( (i, elm) => {
     return $(elm).attr('href')
   }).get()
 
-  return await Promise.all(jobLinks.map(l => getJob(link, { replaceDivs })))
+  return await Promise.all(jobUrls.map(jobUrl => getJob(jobUrl, { replaceDivs })))
 }
 
 exports.sourceNodes = async ({ boundActionCreators }, options) => {
