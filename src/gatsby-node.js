@@ -3,7 +3,7 @@ import axios from 'axios'
 import cheerio from 'cheerio'
 
 const jobSelector = 'a.bb-public-jobs-list__job-item-title.ptor-jobs-list__item-job-title'
-const BASE_URL = 'https://hire.withgoogle.com/public/jobs/';
+const BASE_URL = 'https://hire.withgoogle.com/public/jobs/'
 
 const jobTitleSelector = '.bb-jobs-posting__job-title.ptor-job-view-title'
 const jobDepartmentSelector = '.bb-jobs-posting__job-details-item.ptor-job-view-department'
@@ -43,6 +43,7 @@ exports.sourceNodes = async ({ boundActionCreators }, { companyName }) => {
 		const gatsbyNode = {
 			...job,
 			parent: '__SOURCE__',
+      children: [],
 			internal: {
 				type: 'hireWithGoogleJob',
 				content: jsonString,
