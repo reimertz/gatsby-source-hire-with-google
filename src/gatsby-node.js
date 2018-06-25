@@ -10,7 +10,7 @@ const jobDepartmentSelector = '.bb-jobs-posting__job-details-item.ptor-job-view-
 const jobLocationSelector = '.bb-jobs-posting__job-details-item.ptor-job-view-location'
 const jobContentSelector = '.bb-rich-text-editor__content.ptor-job-view-description'
 
-async function getJob(replaceDivs) { 
+async function getJob(link, { replaceDivs }) { 
   const response = await axios.get(jobUrl)
   const $ = cheerio.load(response.data);
   const content = $(jobContentSelector).html()
@@ -32,7 +32,7 @@ async function getJobs({companyName, replaceDivs = true}) {
     return $(elm).attr('href')
   }).get()
 
-  return await Promise.all(jobLinks.map(l => getJob(replaceDivs)))
+  return await Promise.all(jobLinks.map(l => getJob(link, { replaceDivs })))
 }
 
 exports.sourceNodes = async ({ boundActionCreators }, options) => {

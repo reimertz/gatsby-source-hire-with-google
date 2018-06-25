@@ -21,12 +21,14 @@ const jobDepartmentSelector = '.bb-jobs-posting__job-details-item.ptor-job-view-
 const jobLocationSelector = '.bb-jobs-posting__job-details-item.ptor-job-view-location';
 const jobContentSelector = '.bb-rich-text-editor__content.ptor-job-view-description';
 
-function getJob(_x) {
+function getJob(_x, _x2) {
   return _getJob.apply(this, arguments);
 }
 
 function _getJob() {
-  _getJob = _asyncToGenerator(function* (replaceDivs) {
+  _getJob = _asyncToGenerator(function* (link, {
+    replaceDivs
+  }) {
     const response = yield _axios.default.get(jobUrl);
 
     const $ = _cheerio.default.load(response.data);
@@ -44,7 +46,7 @@ function _getJob() {
   return _getJob.apply(this, arguments);
 }
 
-function getJobs(_x2) {
+function getJobs(_x3) {
   return _getJobs.apply(this, arguments);
 }
 
@@ -60,7 +62,9 @@ function _getJobs() {
     const jobLinks = $(jobSelector).map((i, elm) => {
       return $(elm).attr('href');
     }).get();
-    return yield Promise.all(jobLinks.map(l => getJob(replaceDivs)));
+    return yield Promise.all(jobLinks.map(l => getJob(link, {
+      replaceDivs
+    })));
   });
   return _getJobs.apply(this, arguments);
 }
@@ -90,7 +94,7 @@ function () {
     });
   });
 
-  return function (_x3, _x4) {
+  return function (_x4, _x5) {
     return _ref.apply(this, arguments);
   };
 }();
