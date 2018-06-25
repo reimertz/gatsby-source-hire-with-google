@@ -59,10 +59,10 @@ function _getJobs() {
 
     const $ = _cheerio.default.load(response.data);
 
-    const jobLinks = $(jobSelector).map((i, elm) => {
+    const jobUrls = $(jobSelector).map((i, elm) => {
       return $(elm).attr('href');
     }).get();
-    return yield Promise.all(jobLinks.map(l => getJob(link, {
+    return yield Promise.all(jobUrls.map(jobUrl => getJob(jobUrl, {
       replaceDivs
     })));
   });
