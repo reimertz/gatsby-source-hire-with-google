@@ -21,12 +21,12 @@ const jobDepartmentSelector = '.bb-jobs-posting__job-details-item.ptor-job-view-
 const jobLocationSelector = '.bb-jobs-posting__job-details-item.ptor-job-view-location';
 const jobContentSelector = '.bb-rich-text-editor__content.ptor-job-view-description';
 
-function getJob(_x, _x2) {
+function getJob(_x) {
   return _getJob.apply(this, arguments);
 }
 
 function _getJob() {
-  _getJob = _asyncToGenerator(function* (jobUrl, options) {
+  _getJob = _asyncToGenerator(function* (replaceDivs) {
     const response = yield _axios.default.get(jobUrl);
 
     const $ = _cheerio.default.load(response.data);
@@ -38,13 +38,13 @@ function _getJob() {
       title: $(jobTitleSelector).text(),
       department: $(jobDepartmentSelector).text(),
       location: $(jobLocationSelector).text(),
-      content: options.replaceDivs ? content.replace(/div>/g, 'p>') : content
+      content: replaceDivs ? content.replace(/div>/g, 'p>') : content
     };
   });
   return _getJob.apply(this, arguments);
 }
 
-function getJobs(_x3) {
+function getJobs(_x2) {
   return _getJobs.apply(this, arguments);
 }
 
@@ -60,7 +60,7 @@ function _getJobs() {
     const jobLinks = $(jobSelector).map((i, elm) => {
       return $(elm).attr('href');
     }).get();
-    return yield Promise.all(jobLinks.map(l => getJob(l, options)));
+    return yield Promise.all(jobLinks.map(l => getJob(replaceDivs)));
   });
   return _getJobs.apply(this, arguments);
 }
@@ -90,7 +90,7 @@ function () {
     });
   });
 
-  return function (_x4, _x5) {
+  return function (_x3, _x4) {
     return _ref.apply(this, arguments);
   };
 }();
