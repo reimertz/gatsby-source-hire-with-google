@@ -37,7 +37,7 @@ async function getJobs({companyName, replaceDivs = true}) {
 
 exports.sourceNodes = async ({ boundActionCreators }, options) => {
 	const { createNode } = boundActionCreators
-	const jobs = await getJobs(companyName, options)
+	const jobs = await getJobs(options)
 
 	jobs.forEach(job => {
 		const jsonString = JSON.stringify(job)

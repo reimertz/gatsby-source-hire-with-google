@@ -72,7 +72,7 @@ function () {
     boundActionCreators
   }, options) {
     const createNode = boundActionCreators.createNode;
-    const jobs = yield getJobs(companyName, options);
+    const jobs = yield getJobs(options);
     jobs.forEach(job => {
       const jsonString = JSON.stringify(job);
 
