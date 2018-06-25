@@ -1,0 +1,34 @@
+{
+     "name": "gatsby-source-hire-with-google",
+     "version": "0.1.0",
+     "description": "Gatsby source plugin for loading job openings from hire.withgoogle.com",
+     "main": "gatsby-node.js",
+     "scripts": {
+          "build": "babel src --out-dir ."
+     },
+     "repository": {
+          "type": "git",
+          "url": "https://github.com/reimertz/gatsby-source-hire-with-google"
+     },
+     "bugs": {
+          "url": "https://github.com/reimertz/gatsby-source-hire-with-google/issues"
+     },
+     "contributors": [],
+     "homepage": "https://github.com/reimertz/gatsby-source-hire-with-google",
+     "keywords": [
+          "gatsby",
+          "gatsby-plugin",
+          "gatsby-source-plugin"
+     ],
+     "author": "Pierre Reimertz <pierre@reimertz.co>",
+     "license": "MIT",
+     "dependencies": {
+          "axios": "^0.18.0",
+          "cheerio": "^1.0.0-rc.2"
+     },
+     "devDependencies": {
+          "@babel/cli": "^7.0.0-beta.51",
+          "@babel/core": "^7.0.0-beta.51",
+          "@babel/preset-env": "^7.0.0-beta.51"
+     }
+}
