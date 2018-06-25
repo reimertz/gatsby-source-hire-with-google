@@ -10,7 +10,7 @@ const jobDepartmentSelector = '.bb-jobs-posting__job-details-item.ptor-job-view-
 const jobLocationSelector = '.bb-jobs-posting__job-details-item.ptor-job-view-location'
 const jobContentSelector = '.bb-rich-text-editor__content.ptor-job-view-description'
 
-async function getJob(link, { replaceDivs }) { 
+async function getJob(jobUrl, { replaceDivs }) { 
   const response = await axios.get(jobUrl)
   const $ = cheerio.load(response.data);
   const content = $(jobContentSelector).html()

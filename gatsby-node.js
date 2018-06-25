@@ -26,7 +26,7 @@ function getJob(_x, _x2) {
 }
 
 function _getJob() {
-  _getJob = _asyncToGenerator(function* (link, {
+  _getJob = _asyncToGenerator(function* (jobUrl, {
     replaceDivs
   }) {
     const response = yield _axios.default.get(jobUrl);
