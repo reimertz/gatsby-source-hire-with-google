@@ -1,11 +1,12 @@
 {
      "name": "gatsby-source-hire-with-google",
-     "version": "1.0.1",
+     "version": "1.0.2",
      "description": "Gatsby source plugin for loading job openings from hire.withgoogle.com",
      "main": "gatsby-node.js",
      "scripts": {
           "build": "babel src/*.js --out-dir .",
-          "test": "npm run build && ava src/test"
+          "test": "npm run build && ava src/test",
+          "update-snapshots": "npm run build && ava src/test --update-snapshots "
      },
      "repository": {
           "type": "git",
