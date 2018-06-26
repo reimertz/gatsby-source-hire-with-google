@@ -19,10 +19,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } } function _next(value) { step("next", value); } function _throw(err) { step("throw", err); } _next(); }); }; }
 
-const config = {
-  maxRedirects: 0
-};
-
 const generateBaseUrl = companyName => `https://hire.withgoogle.com/v2/api/t/${companyName}/public/jobs`;
 
 exports.generateBaseUrl = generateBaseUrl;
@@ -38,7 +34,9 @@ function _getJobs() {
     try {
       const URL = generateBaseUrl(companyName);
 
-      const _ref = yield _axios.default.get(URL, config),
+      const _ref = yield _axios.default.get(URL, {
+        maxRedirects: 0
+      }),
             data = _ref.data,
             status = _ref.status;
 
@@ -61,7 +59,7 @@ function _sourceNodes() {
     companyName
   }) {
     const createNode = boundActionCreators.createNode;
-    const jobs = yield getJobs(config);
+    const jobs = yield getJobs(companyName);
     jobs.forEach(job => {
       const jsonString = JSON.stringify(job);
 
