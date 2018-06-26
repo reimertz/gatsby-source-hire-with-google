@@ -1,6 +1,6 @@
 {
      "name": "gatsby-source-hire-with-google",
-     "version": "0.2.2",
+     "version": "1.0.0",
      "description": "Gatsby source plugin for loading job openings from hire.withgoogle.com",
      "main": "gatsby-node.js",
      "scripts": {
