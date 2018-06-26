@@ -38,9 +38,14 @@ function _getJobs() {
         maxRedirects: 0
       }),
             data = _ref.data,
-            status = _ref.status;
+            status = _ref.status; // Gatsby requires each node to contain an id, so that is why add it here.
 
-      return data;
+
+      return data.map(j => {
+        return _objectSpread({
+          id: j.identifier.value
+        }, j);
+      });
     } catch (e) {
       throw new Error(`Couldn't fetch jobs for ${companyName}. You sure ${generateBaseUrl(companyName)} exists?`);
     }
