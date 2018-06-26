@@ -4,7 +4,8 @@
      "description": "Gatsby source plugin for loading job openings from hire.withgoogle.com",
      "main": "gatsby-node.js",
      "scripts": {
-          "build": "babel src --out-dir ."
+          "build": "ava && babel src --out-dir .",
+          "test": "ava"
      },
      "repository": {
           "type": "git",
@@ -23,12 +24,13 @@
      "author": "Pierre Reimertz <pierre@reimertz.co>",
      "license": "MIT",
      "dependencies": {
-          "axios": "^0.18.0",
-          "cheerio": "^1.0.0-rc.2"
+          "axios": "^0.18.0"
      },
      "devDependencies": {
           "@babel/cli": "^7.0.0-beta.51",
           "@babel/core": "^7.0.0-beta.51",
-          "@babel/preset-env": "^7.0.0-beta.51"
+          "@babel/node": "^7.0.0-beta.51",
+          "@babel/preset-env": "^7.0.0-beta.51",
+          "ava": "1.0.0-beta.6"
      }
 }

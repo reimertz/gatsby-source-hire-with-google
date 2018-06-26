@@ -1,5 +1,5 @@
 # gatsby-source-hire-with-google
-> Loads job openings from hire.withgoogle.com/public/jobs/{companyName} into Gatsby.js source system.
+> Loads job openings from Hire With Google into Gatsby.js.
 
 ## Installation
 
@@ -26,8 +26,6 @@ Next, add `companyName` in your `gatsby-config.js`:
       resolve: 'gatsby-source-hire-with-google',
       options: {
         companyName: '{COMPANY_NAME}',
-        replaceDivs: false // true is default. Hire defaults to use <div> instead of <p> for paragrahs, so if you prefer this, set this to false.
-
       },
     },
   ]
@@ -36,16 +34,16 @@ Next, add `companyName` in your `gatsby-config.js`:
 
 ## How to Query
 
+Hire With Google uses the [JobPosting](https://schema.org/JobPosting) schema from [schema.org](https://schema.org).
+
+You can read more about their API [here](https://storage.googleapis.com/support-kms-prod/NpRyCAyX1xwNwMAWuC3MhBe5Omq1TCxO7UFD).
+
 ```graphql
 {
     allHireWithGoogleJob {
       edges {
         node {
-          id
-          url
-          title
-          department
-          content
+          ... https://schema.org/JobPosting for schema
         }
       }
     }

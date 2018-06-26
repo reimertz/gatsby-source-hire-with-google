@@ -1,43 +1,29 @@
 import crypto from 'crypto'
 import axios from 'axios'
-import cheerio from 'cheerio'
 
-const jobSelector = 'a.bb-public-jobs-list__job-item-title.ptor-jobs-list__item-job-title'
-const BASE_URL = 'https://hire.withgoogle.com/public/jobs/'
+const config = {
+  maxRedirects: 0
+}
 
-const jobTitleSelector = '.bb-jobs-posting__job-title.ptor-job-view-title'
-const jobDepartmentSelector = '.bb-jobs-posting__job-details-item.ptor-job-view-department'
-const jobLocationSelector = '.bb-jobs-posting__job-details-item.ptor-job-view-location'
-const jobContentSelector = '.bb-rich-text-editor__content.ptor-job-view-description'
+export const generateBaseUrl = (companyName) =>  `https://hire.withgoogle.com/v2/api/t/${companyName}/public/jobs`
 
-async function getJob(jobUrl, { replaceDivs }) { 
-  const response = await axios.get(jobUrl)
-  const $ = cheerio.load(response.data);
-  const content = $(jobContentSelector).html()
+export async function getJobs(companyName) {
+  if (!companyName) throw new Error('You need to define companyName in gatsby-config.js.')
+  
+  try {
+    const URL = generateBaseUrl(companyName)
+    const { data, status } = await axios.get(URL, config)
 
-  return {
-  	id: jobUrl.split('/').pop(),
-    url: jobUrl,
-    title: $(jobTitleSelector).text(),
-    department: $(jobDepartmentSelector).text(),
-    location: $(jobLocationSelector).text(),
-    content: replaceDivs ? content.replace(/div>/g,'p>') : content
+    return data
+      
+  } catch (e) {
+    throw new Error(`Couldn't fetch jobs for ${companyName}. You sure ${generateBaseUrl(companyName)} exists?`) 
   }
 }
 
-async function getJobs({companyName, replaceDivs = true}) {
-  const response = await axios.get(`${BASE_URL}${companyName}`)
-  const $ = cheerio.load(response.data)
-  const jobUrls = $(jobSelector).map( (i, elm) => {
-    return $(elm).attr('href')
-  }).get()
-
-  return await Promise.all(jobUrls.map(jobUrl => getJob(jobUrl, { replaceDivs })))
-}
-
-exports.sourceNodes = async ({ boundActionCreators }, options) => {
+export async function sourceNodes ({ boundActionCreators }, { companyName }) {
 	const { createNode } = boundActionCreators
-	const jobs = await getJobs(options)
+	const jobs = await getJobs(config)
 
 	jobs.forEach(job => {
 		const jsonString = JSON.stringify(job)

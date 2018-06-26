@@ -1,10 +1,15 @@
 "use strict";
 
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.getJobs = getJobs;
+exports.sourceNodes = sourceNodes;
+exports.generateBaseUrl = void 0;
+
 var _crypto = _interopRequireDefault(require("crypto"));
 
 var _axios = _interopRequireDefault(require("axios"));
-
-var _cheerio = _interopRequireDefault(require("cheerio"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -14,69 +19,49 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } } function _next(value) { step("next", value); } function _throw(err) { step("throw", err); } _next(); }); }; }
 
-const jobSelector = 'a.bb-public-jobs-list__job-item-title.ptor-jobs-list__item-job-title';
-const BASE_URL = 'https://hire.withgoogle.com/public/jobs/';
-const jobTitleSelector = '.bb-jobs-posting__job-title.ptor-job-view-title';
-const jobDepartmentSelector = '.bb-jobs-posting__job-details-item.ptor-job-view-department';
-const jobLocationSelector = '.bb-jobs-posting__job-details-item.ptor-job-view-location';
-const jobContentSelector = '.bb-rich-text-editor__content.ptor-job-view-description';
+const config = {
+  maxRedirects: 0
+};
 
-function getJob(_x, _x2) {
-  return _getJob.apply(this, arguments);
-}
+const generateBaseUrl = companyName => `https://hire.withgoogle.com/v2/api/t/${companyName}/public/jobs`;
 
-function _getJob() {
-  _getJob = _asyncToGenerator(function* (jobUrl, {
-    replaceDivs
-  }) {
-    const response = yield _axios.default.get(jobUrl);
+exports.generateBaseUrl = generateBaseUrl;
 
-    const $ = _cheerio.default.load(response.data);
-
-    const content = $(jobContentSelector).html();
-    return {
-      id: jobUrl.split('/').pop(),
-      url: jobUrl,
-      title: $(jobTitleSelector).text(),
-      department: $(jobDepartmentSelector).text(),
-      location: $(jobLocationSelector).text(),
-      content: replaceDivs ? content.replace(/div>/g, 'p>') : content
-    };
-  });
-  return _getJob.apply(this, arguments);
-}
-
-function getJobs(_x3) {
+function getJobs(_x) {
   return _getJobs.apply(this, arguments);
 }
 
 function _getJobs() {
-  _getJobs = _asyncToGenerator(function* ({
-    companyName,
-    replaceDivs = true
-  }) {
-    const response = yield _axios.default.get(`${BASE_URL}${companyName}`);
+  _getJobs = _asyncToGenerator(function* (companyName) {
+    if (!companyName) throw new Error('You need to define companyName in gatsby-config.js.');
 
-    const $ = _cheerio.default.load(response.data);
+    try {
+      const URL = generateBaseUrl(companyName);
 
-    const jobUrls = $(jobSelector).map((i, elm) => {
-      return $(elm).attr('href');
-    }).get();
-    return yield Promise.all(jobUrls.map(jobUrl => getJob(jobUrl, {
-      replaceDivs
-    })));
+      const _ref = yield _axios.default.get(URL, config),
+            data = _ref.data,
+            status = _ref.status;
+
+      return data;
+    } catch (e) {
+      throw new Error(`Couldn't fetch jobs for ${companyName}. You sure ${generateBaseUrl(companyName)} exists?`);
+    }
   });
   return _getJobs.apply(this, arguments);
 }
 
-exports.sourceNodes =
-/*#__PURE__*/
-function () {
-  var _ref = _asyncToGenerator(function* ({
+function sourceNodes(_x2, _x3) {
+  return _sourceNodes.apply(this, arguments);
+}
+
+function _sourceNodes() {
+  _sourceNodes = _asyncToGenerator(function* ({
     boundActionCreators
-  }, options) {
+  }, {
+    companyName
+  }) {
     const createNode = boundActionCreators.createNode;
-    const jobs = yield getJobs(options);
+    const jobs = yield getJobs(config);
     jobs.forEach(job => {
       const jsonString = JSON.stringify(job);
 
@@ -93,8 +78,5 @@ function () {
       createNode(gatsbyNode);
     });
   });
-
-  return function (_x4, _x5) {
-    return _ref.apply(this, arguments);
-  };
-}();
+  return _sourceNodes.apply(this, arguments);
+}
