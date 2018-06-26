@@ -1,10 +1,6 @@
 import crypto from 'crypto'
 import axios from 'axios'
 
-const config = {
-  maxRedirects: 0
-}
-
 export const generateBaseUrl = (companyName) =>  `https://hire.withgoogle.com/v2/api/t/${companyName}/public/jobs`
 
 export async function getJobs(companyName) {
@@ -12,7 +8,7 @@ export async function getJobs(companyName) {
   
   try {
     const URL = generateBaseUrl(companyName)
-    const { data, status } = await axios.get(URL, config)
+    const { data, status } = await axios.get(URL, { maxRedirects: 0 })
 
     return data
       
@@ -23,7 +19,7 @@ export async function getJobs(companyName) {
 
 export async function sourceNodes ({ boundActionCreators }, { companyName }) {
 	const { createNode } = boundActionCreators
-	const jobs = await getJobs(config)
+	const jobs = await getJobs(companyName)
 
 	jobs.forEach(job => {
 		const jsonString = JSON.stringify(job)
