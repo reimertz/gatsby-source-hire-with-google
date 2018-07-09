@@ -10,10 +10,12 @@ export async function getJobs(companyName) {
     const URL = generateBaseUrl(companyName)
     const { data, status } = await axios.get(URL, { maxRedirects: 0 })
 
-    // Gatsby requires each node to contain an id, so that is why add it here.
-    return data.map(j => {
+    if (status === 404) {
+      return []
+    }
+    else return data.map(j => {
       return {
-        id: j.identifier.value,
+        id: j.identifier.value,   // Gatsby requires each node to contain an id, so that is why add it here.
         ...j
       }
     })
