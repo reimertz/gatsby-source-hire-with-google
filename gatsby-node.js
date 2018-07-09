@@ -38,10 +38,11 @@ function _getJobs() {
         maxRedirects: 0
       }),
             data = _ref.data,
-            status = _ref.status; // Gatsby requires each node to contain an id, so that is why add it here.
+            status = _ref.status;
 
-
-      return data.map(j => {
+      if (status === 404) {
+        return [];
+      } else return data.map(j => {
         return _objectSpread({
           id: j.identifier.value
         }, j);
