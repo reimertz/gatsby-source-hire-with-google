@@ -8,8 +8,11 @@ export async function getJobs(companyName) {
   
   try {
     const URL = generateBaseUrl(companyName)
-    const { data, status } = await axios.get(URL, { maxRedirects: 0 })
-
+    const { data, status } = await axios.get(URL, { 
+      maxRedirects: 0,
+      validateStatus: status => status >= 200 && status < 300 || status === 404
+    })
+ 
     if (status === 404) {
       return []
     }

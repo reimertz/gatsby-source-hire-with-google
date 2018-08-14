@@ -35,7 +35,8 @@ function _getJobs() {
       const URL = generateBaseUrl(companyName);
 
       const _ref = yield _axios.default.get(URL, {
-        maxRedirects: 0
+        maxRedirects: 0,
+        validateStatus: status => status >= 200 && status < 300 || status === 404
       }),
             data = _ref.data,
             status = _ref.status;
