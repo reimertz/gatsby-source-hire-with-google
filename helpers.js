@@ -3,11 +3,10 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.sourceNodes = sourceNodes;
+exports.fetchJobs = fetchJobs;
+exports.generateBaseUrl = void 0;
 
-var _crypto = _interopRequireDefault(require("crypto"));
-
-var _helpers = require("./helpers");
+var _axios = _interopRequireDefault(require("axios"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -17,33 +16,38 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } } function _next(value) { step("next", value); } function _throw(err) { step("throw", err); } _next(); }); }; }
 
-function sourceNodes(_x, _x2) {
-  return _sourceNodes.apply(this, arguments);
+const generateBaseUrl = companyName => `https://hire.withgoogle.com/v2/api/t/${companyName}/public/jobs`;
+
+exports.generateBaseUrl = generateBaseUrl;
+
+function fetchJobs(_x) {
+  return _fetchJobs.apply(this, arguments);
 }
 
-function _sourceNodes() {
-  _sourceNodes = _asyncToGenerator(function* ({
-    boundActionCreators
-  }, {
-    companyName
-  }) {
-    const createNode = boundActionCreators.createNode;
-    const jobs = yield (0, _helpers.fetchJobs)(companyName);
-    jobs.forEach(job => {
-      const jsonString = JSON.stringify(job);
+function _fetchJobs() {
+  _fetchJobs = _asyncToGenerator(function* (companyName) {
+    if (!companyName) throw new Error('You need to define companyName in gatsby-config.js.');
 
-      const gatsbyNode = _objectSpread({}, job, {
-        parent: '__SOURCE__',
-        children: [],
-        internal: {
-          type: 'hireWithGoogleJob',
-          content: jsonString,
-          contentDigest: _crypto.default.createHash('md5').update(jsonString).digest('hex')
-        }
+    try {
+      const URL = generateBaseUrl(companyName);
+
+      const _ref = yield _axios.default.get(URL, {
+        maxRedirects: 0,
+        validateStatus: status => status >= 200 && status < 300 || status === 404
+      }),
+            data = _ref.data,
+            status = _ref.status;
+
+      if (status === 404) {
+        return [];
+      } else return data.map(j => {
+        return _objectSpread({
+          id: j.identifier.value
+        }, j);
       });
-
-      createNode(gatsbyNode);
-    });
+    } catch (e) {
+      throw new Error(`Couldn't fetch jobs for ${companyName}. You sure ${generateBaseUrl(companyName)} exists?`);
+    }
   });
-  return _sourceNodes.apply(this, arguments);
+  return _fetchJobs.apply(this, arguments);
 }
