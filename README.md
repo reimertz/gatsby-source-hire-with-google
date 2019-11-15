@@ -4,12 +4,6 @@
 
 Loads job openings from Hire With Google into Gatsby.js.
 
----
-
-<center>
-  <img src="https://api.travis-ci.org/reimertz/gatsby-source-hire-with-google.svg?branch=master"/>
-</center>
-
 ## Installation
 
 ```bash
